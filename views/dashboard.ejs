@@ -1,0 +1,36 @@
+<!-- views/dashboard.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+</head>
+<body>
+  <h1>Welcome to the Dashboard, <%= user.username %>!</h1>
+
+  <!-- Continue button to redirect to /csv-importer -->
+<!-- Include this link or button wherever you want it in your dashboard view -->
+<a href="/csv-importer">Continue to CSV Import</a>
+<hr>
+
+
+<a id="viewTeamButton" href="/csv-importer/display" <%= user.uploadedCSV ? '' : 'disabled' %>>View Your Team</a>
+
+
+<!--  script for disabling the CSV import -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    console.log('Script executed!');
+    var viewTeamButton = document.getElementById('viewTeamButton');
+    <% if (user.uploadedCSV) { %>
+      viewTeamButton.removeAttribute('disabled');
+    <% } else { %>
+      viewTeamButton.setAttribute('disabled', true);
+    <% } %>
+  });
+</script>
+
+</body>
+</html>
