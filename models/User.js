@@ -23,6 +23,11 @@ const userSchema = new mongoose.Schema({
     verificationToken: {
       type: String, // Change the type accordingly based on your token generation method
     },
+
+    isPaymentVerified:{
+      type:Boolean,
+      default:false,
+    }
   });
   
   

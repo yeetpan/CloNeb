@@ -9,6 +9,7 @@ const hCaptcha = require('hcaptcha');
 const router = express.Router();
 const app = express();
 const Team = require('../models/Team.js');
+const User=require('..models/User.js')
 app.set('view engine', 'ejs');
 
 const isAuthenticated = require(path.join(__dirname, '..', 'middleware', 'isAuthenticated'));
