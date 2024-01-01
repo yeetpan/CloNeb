@@ -64,8 +64,7 @@ router.get('/upload', isAuthenticated, (req, res) => {
 
 
 
-
- router.post('/upload', isAuthenticated, upload.single('csvFile'), async (req, res) => {
+router.post('/upload', isAuthenticated, upload.single('csvFile'), async (req, res) => {
   try {
     if (req.session.uploadedCSV) {
       // CSV has already been uploaded, redirect to display page
@@ -84,36 +83,38 @@ router.get('/upload', isAuthenticated, (req, res) => {
     if (!records || records.length === 0) {
       return res.status(400).send('No valid records found in the CSV file.');
     }
+
     const existingRecords = await Team.find({});
     if (existingRecords && existingRecords.length > 0) {
       // Records already exist, redirect to the display page
       return res.redirect('/csv-importer/display');
     }
 
-
     // Save records to MongoDB using the Mongoose model (Team)
     const adminToken = generateRandomToken();
+
+    // Fetch the admin's ID
+    const admin = await User.findOne({ googleId: req.user.googleId });
+
+    if (!admin) {
+      return res.status(404).send('Admin not found.');
+    }
 
     for (const record of records) {
       const { isVerified, token, acceptanceCode } = generateRandomTokenAndAcceptanceCode();
       record.token = token;
-      
-      record.isVerified = isPaymentVerified; 
+      // Assuming isPaymentVerified is defined somewhere in your code
+      // record.isVerified = isPaymentVerified;
       record.acceptanceCode = acceptanceCode;
+      record.adminId = admin._id; // Set the admin's ID in the team record
       await Team.create(record);
       sendEmailToTeamMember(record.gmail, record.acceptanceCode);
     }
-     // Send email to team member
-     
-    
 
     // Send email to admin
     sendEmailToAdmin(req.user.email, adminToken);
 
-    //await Team.insertMany(records);
-    //req.session.adminToken = records[0].token; 
     req.session.adminToken = adminToken; 
-    // Set a session variable to indicate that the user has uploaded a CSV
     req.session.uploadedCSV = true;
 
     // Use 303 See Other status to redirect after POST

@@ -43,7 +43,7 @@ app.use(passport.session());
 passport.use(new GoogleStrategy({
     clientID:  process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: 'https://nebula-1zdu.onrender.com/auth/google/callback'
+    callbackURL: 'http://localhost:3000/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
 
@@ -207,7 +207,7 @@ const upload = multer({ storage: storage });
           await newUser.save();
       
           // Update the verification link with the token and username
-          const verificationLink = `https://nebula-1zdu.onrender.com/verify-email/${userEmail}/${verificationToken}`;
+          const verificationLink = `https://localhost:3000/verify-email/${userEmail}/${verificationToken}`;
       
           const mailOptions = {
             from: process.env.GMAIL_USER,

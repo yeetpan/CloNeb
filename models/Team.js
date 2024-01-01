@@ -4,9 +4,9 @@ const teamSchema = new mongoose.Schema({
   name: String,
   collegeName: String,
   rollNo: String,
-  gmail: String,
+  gmail: String, // Reference to the 'gmail' field in User schema
   phone: String,
-  profilePic: String, // Add profile picture field
+  profilePic: String,
   instagramBio: String,
   bio: String,
   customFields: { type: Map, of: String },
@@ -29,9 +29,13 @@ const teamSchema = new mongoose.Schema({
       return generateRandomAcceptanceCode(10);
     },
   },
+  
+  adminId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', // Reference to the User model
+    required: true,
+  },
 });
-
-// Define other necessary functions used in the schema, such as generateRandomToken and generateRandomAcceptanceCode
 
 const Team = mongoose.model('teams', teamSchema);
 
